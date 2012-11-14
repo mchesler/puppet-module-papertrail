@@ -1,8 +1,7 @@
 class papertrail::install {
-
-  package { ['rsyslog', 'rsyslog-gnutls', 'wget']:
-    ensure  => 'installed'
-  }
+  if ! defined(Package['rsyslog'])        { package { 'rsyslog':        ensure => installed } }
+  if ! defined(Package['rsyslog-gnutls']) { package { 'rsyslog-gnutls': ensure => installed } }
+  if ! defined(Package['wget'])           { package { 'wget':           ensure => installed } }
 
   file { '/etc/rsyslog.d/papertrail.conf':
     ensure  => 'present',
