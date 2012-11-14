@@ -1,15 +1,16 @@
-# file is managed by puppet
+# This file is managed by Puppet
+# Any changes will be overwritten in the next update
 
 $DefaultNetstreamDriverCAFile /etc/syslog.papertrail.crt    # trust these CAs
 $DefaultNetstreamDriver gtls                                # use gtls netstream driver
 $ActionSendStreamDriverMode 1                               # require TLS
 $ActionSendStreamDriverAuthMode x509/name                   # authenticate by hostname
 
-*.* @@<%= host %><% unless port.empty? %>:<%= port %><% end %>
+*.* @@<%= scope.lookupvar("papertrail::dest_host") %><% unless scope.lookupvar("papertrail::dest_port").empty? %>:<%= scope.lookupvar("papertrail::dest_port") %><% end %>
 
-<% unless optional_files.empty? %>
+<% unless scope.lookupvar("papertrail::monitor_files").empty? %>
 $ModLoad imfile
-<% optional_files.each do |file| -%>
+<% scope.lookupvar("monitor_files").each do |file| -%>
 $InputFileName <%= file %>
 $InputFileTag <%= file.split('/').last %>:
 #$InputFilePersistStateInterval 100
